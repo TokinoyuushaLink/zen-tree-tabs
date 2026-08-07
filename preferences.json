@@ -1,0 +1,52 @@
+[
+  {
+    "property": "zen.tree-tabs.enabled",
+    "type": "checkbox",
+    "label": "Enable tree style tabs",
+    "default": true
+  },
+  {
+    "type": "separator",
+    "label": "Layout"
+  },
+  {
+    "property": "zen.tree-tabs.indent-px",
+    "type": "string",
+    "label": "Indent per level (px)",
+    "default": "14"
+  },
+  {
+    "property": "zen.tree-tabs.max-depth",
+    "type": "string",
+    "label": "Maximum nesting depth",
+    "default": "8"
+  },
+  {
+    "property": "zen.tree-tabs.show-twisty",
+    "type": "checkbox",
+    "label": "Show collapse/expand arrow on parent tabs",
+    "default": true
+  },
+  {
+    "type": "separator",
+    "label": "Behaviour"
+  },
+  {
+    "property": "zen.tree-tabs.reorder-on-open",
+    "type": "checkbox",
+    "label": "Move new child tabs directly below their parent's subtree",
+    "default": true
+  },
+  {
+    "property": "zen.tree-tabs.close-subtree",
+    "type": "checkbox",
+    "label": "Closing a parent tab also closes its descendants (otherwise they are promoted to the grandparent)",
+    "default": false
+  },
+  {
+    "property": "zen.tree-tabs.debug",
+    "type": "checkbox",
+    "label": "Log tree operations to the Browser Console",
+    "default": false
+  }
+]

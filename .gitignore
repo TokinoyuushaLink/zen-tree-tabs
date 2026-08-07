@@ -1,0 +1,5 @@
+# Third-party bootloader files staged for manual copy into Zen.app.
+# Not ours to redistribute — fetch from https://github.com/sineorg/bootloader
+_bootloader-for-zen-app/
+
+.DS_Store

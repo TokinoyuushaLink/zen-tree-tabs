@@ -1,0 +1,19 @@
+{
+  "id": "zen-tree-tabs",
+  "name": "Tree Style Tabs",
+  "description": "Automatic tree hierarchy for unpinned tabs in Zen's sidebar. Tabs nest under the tab they were opened from, with collapse/expand and close-subtree.",
+  "scripts": {
+    "zen-tree-tabs.uc.js": {
+      "include": ["chrome://browser/content/browser.xhtml"]
+    }
+  },
+  "style": {
+    "chrome": "userChrome.css"
+  },
+  "preferences": "preferences.json",
+  "homepage": "https://github.com/hodgea/zen-tree-tabs",
+  "author": "hodgea",
+  "version": "0.1.0",
+  "tags": ["Zen Browser", "Vertical Tabs", "Tree Style Tabs"],
+  "fork": ["zen"]
+}

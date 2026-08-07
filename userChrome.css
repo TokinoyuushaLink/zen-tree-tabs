@@ -1,0 +1,78 @@
+/*
+ * Zen Tree Style Tabs — chrome styling
+ *
+ * Indentation deliberately routes through Zen's own `--zen-folder-indent`
+ * variable rather than setting `margin-inline-start` directly. Zen declares
+ *
+ *   :root[zen-sidebar-expanded="true"] .tabbrowser-tab:not([zen-glance-tab]) {
+ *     margin-inline-start: var(--zen-folder-indent) !important;
+ *   }
+ *
+ * in zen-styles/zen-tabs/vertical-tabs.css, and that `!important` would beat any
+ * margin we set ourselves. Feeding its variable instead means we inherit Zen's
+ * indent transition for free and stay correct if the selector moves.
+ */
+
+:root[ztt-active] {
+  --ztt-twisty-size: 12px;
+}
+
+/* Depth -> indent. Only tabs the script has claimed carry [ztt-depth]. */
+:root[ztt-active] .tabbrowser-tab[ztt-depth] {
+  --zen-folder-indent: var(--ztt-indent, 0px);
+}
+
+/* Collapsed subtrees. The script guarantees the selected tab is never in here. */
+:root[ztt-active] .tabbrowser-tab[ztt-concealed] {
+  display: none !important;
+}
+
+/* ------------------------------------------------------------------ twisty */
+
+:root[ztt-active] .ztt-twisty {
+  width: var(--ztt-twisty-size);
+  height: var(--ztt-twisty-size);
+  margin-inline-end: 2px;
+  flex: 0 0 auto;
+  padding: 0;
+  border-radius: 3px;
+  list-style-image: url("chrome://global/skin/icons/arrow-down.svg");
+  -moz-context-properties: fill;
+  fill: currentColor;
+  opacity: 0.55;
+  transition:
+    transform 0.15s ease,
+    opacity 0.15s ease,
+    background-color 0.15s ease;
+}
+
+:root[ztt-active] .ztt-twisty:hover {
+  opacity: 1;
+  background-color: color-mix(in srgb, currentColor 15%, transparent);
+}
+
+:root[ztt-active] .tabbrowser-tab[ztt-collapsed="true"] .ztt-twisty {
+  transform: rotate(-90deg);
+  opacity: 0.9;
+}
+
+/* The sidebar collapses to icons only — indentation and twisties are noise there. */
+:root:not([zen-sidebar-expanded="true"])[ztt-active] .ztt-twisty {
+  display: none;
+}
+
+:root:not([zen-sidebar-expanded="true"])[ztt-active] .tabbrowser-tab[ztt-depth] {
+  --zen-folder-indent: 0px;
+}
+
+/*
+ * Extension point: uncomment for tree guide lines down the left of each level.
+ * Kept off by default because Zen's tab background already carries a lot of
+ * visual weight and the guides fight with the active-tab pill.
+ *
+ * :root[ztt-active] .tabbrowser-tab[ztt-depth]:not([ztt-depth="0"]) .tab-background {
+ *   border-inline-start: 1px solid color-mix(in srgb, currentColor 20%, transparent);
+ *   border-start-start-radius: 0;
+ *   border-end-start-radius: 0;
+ * }
+ */
