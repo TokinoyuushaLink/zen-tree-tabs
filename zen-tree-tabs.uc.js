@@ -37,9 +37,21 @@
     }
   }
 
-  const { SessionStore } = ChromeUtils.importESModule(
-    "resource:///modules/sessionstore/SessionStore.sys.mjs"
-  );
+  // Firefox 158 moved browser/components modules to moz-src:///; the old resource:///
+  // URL no longer resolves, and an import failure here kills the whole script silently.
+  const SessionStore = (() => {
+    for (const url of [
+      "moz-src:///browser/components/sessionstore/SessionStore.sys.mjs",
+      "resource:///modules/sessionstore/SessionStore.sys.mjs",
+    ]) {
+      try {
+        return ChromeUtils.importESModule(url).SessionStore;
+      } catch (e) {
+        // try the next location
+      }
+    }
+    throw new Error("[ztt] could not locate SessionStore.sys.mjs");
+  })();
 
   class ZenTreeTabs {
     #listeners = [];
@@ -160,6 +172,9 @@
         !tab.pinned &&
         !tab.hasAttribute("zen-glance-tab") &&
         !tab.hasAttribute("zen-empty-tab") &&
+        // Zen's own split-view groups, plus Firefox's native <tab-split-view-wrapper>
+        // (tab.splitview) which moveTabTo treats as one unit.
+        !tab.splitview &&
         !tab.group?.hasAttribute("split-view-group") &&
         !tab.group?.isZenFolder
       );
@@ -486,7 +501,11 @@
 
       menu.append(separator, collapse, close);
 
-      this.#on(menu, "popupshowing", () => {
+      this.#on(menu, "popupshowing", (event) => {
+        // popupshowing bubbles up from submenus (move-to-group, share, ...).
+        if (event.target !== menu) {
+          return;
+        }
         const tab = TabContextMenu.contextTab;
         const kids = tab && this.#eligible(tab) ? this.#childrenOf(tab).length : 0;
         const show = this.enabled && kids > 0;

@@ -5,6 +5,23 @@ under the tab they were opened from, with collapse/expand and close-subtree.
 
 Verified working on **Zen 1.21.11b** (Firefox 152), macOS 26.3, Apple Silicon.
 
+Adapted for **Zen 1.23.x** (Firefox 158) by reading the internals of a Windows 1.23.4b build
+(`omni.ja`). Every hook the script touches was checked there; it has not been run against
+1.23.1b itself. What was checked:
+
+- `ZenWorkspacesUIUpdate` is still dispatched (now from `modules/zen/ZenSpaceManager.mjs`).
+- `tabbrowser._createTab()` still sets `tab.openerTab` before `TabOpen` fires;
+  `moveTabTo({ tabIndex })` keeps its signature and final-index semantics.
+- `gBrowser.tabs` is `tabContainer.allTabs`, a real array scoped to the current space.
+- Tab context menu: Firefox now lays it out with `MenuSectionLayout`, which throws on
+  unclaimed items. The layout's `open: true` sections exempt trailing items, so the
+  appended entries are safe. If a future build drops that, the menu breaks entirely.
+- **Breaking change fixed:** Firefox 158 moved `SessionStore` from
+  `resource:///modules/sessionstore/` to `moz-src:///browser/components/sessionstore/`.
+  The old import threw at the top of the script, so the mod silently did nothing. The script
+  now tries the new URL first and falls back to the old one.
+- New guard: tabs inside Firefox's native split view (`tab.splitview`) are left alone.
+
 ## Why this isn't a normal Zen Mod
 
 Official Zen Mods are CSS + `preferences.json` only. CSS can't read `openerTab` or
